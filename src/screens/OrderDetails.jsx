@@ -85,6 +85,18 @@ export default function OrderDetails() {
         Call Uber Pickup
       </button>
 
+      <button
+        onClick={() => navigate(`/orders/${orderId}/refund`)}
+        style={{
+          width: '100%', padding: '14px',
+          background: 'var(--color-paper)', color: 'var(--color-ink)',
+          border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)',
+          fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer',
+        }}
+      >
+        💰 คืนเงิน / ยกเลิก Order
+      </button>
+
     </div>
   );
 }
