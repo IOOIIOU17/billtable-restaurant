@@ -1,41 +1,47 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useRestaurantStore from '../store/restaurantStore';
+import { useRestaurantStore } from '../store/restaurantStore';
 import api from '../services/api';
+import logo from '../billtable-logo.png';
+
+const inputStyle = {
+  width: '100%',
+  padding: '12px 16px',
+  border: '2px solid var(--color-ink)',
+  borderRadius: '12px',
+  fontFamily: 'var(--font-body)',
+  fontSize: '16px',
+  background: 'var(--color-paper)',
+  outline: 'none',
+};
 
 export default function Login() {
-  const navigate = useNavigate();
-  const setToken = useRestaurantStore((s) => s.setToken);
-  const setRestaurant = useRestaurantStore((s) => s.setRestaurant);
-  const [form, setForm] = useState({ email: '', password: '', name: '', phone: '' });
   const [isLogin, setIsLogin] = useState(true);
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
-
-  const inputStyle = {
-    width: '100%',
-    padding: '12px 16px',
-    border: '2px solid var(--color-ink)',
-    borderRadius: 'var(--radius)',
-    fontFamily: 'var(--font-body)',
-    fontSize: '16px',
-    background: 'var(--color-paper)',
-    color: 'var(--color-ink)',
-    outline: 'none',
-  };
+  const navigate = useNavigate();
+  const { setToken, setRestaurant } = useRestaurantStore();
 
   const handleSubmit = async () => {
     try {
       if (isLogin) {
-        const res = await api.post('/api/auth/login', { email: form.email, password: form.password });
+        const res = await api.post('/api/auth/login', {
+          email: form.email,
+          password: form.password,
+        });
         setToken(res.data.accessToken);
         setRestaurant(res.data.user);
+        navigate('/orders');
       } else {
-        await api.post('/api/auth/register', { email: form.email, password: form.password, name: form.name });
-        const res = await api.post('/api/auth/login', { email: form.email, password: form.password });
+        const res = await api.post('/api/auth/register', {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        });
         setToken(res.data.accessToken);
         setRestaurant(res.data.user);
+        navigate('/orders');
       }
-      navigate('/orders');
     } catch (e) {
       setError('Login failed. Please check your credentials.');
     }
@@ -54,8 +60,11 @@ export default function Login() {
       maxWidth: '400px',
       margin: '0 auto',
     }}>
-
-      <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '40px' }}>BillTable</h1>
+      <img
+        src={logo}
+        alt="BillTable"
+        style={{ height: '72px', width: 'auto' }}
+      />
       <p style={{ fontFamily: 'var(--font-body)', fontSize: '18px', textAlign: 'center', color: 'var(--color-pencil)' }}>
         {isLogin ? 'Restaurant login' : 'Join BillTable'}
       </p>
