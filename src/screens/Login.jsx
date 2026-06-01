@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRestaurantStore } from '../store/restaurantStore';
+import useRestaurantStore from '../store/restaurantStore';
 import api from '../services/api';
 import logo from '../billtable-logo.png';
 
