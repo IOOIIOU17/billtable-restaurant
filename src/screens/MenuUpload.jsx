@@ -60,7 +60,7 @@ export default function MenuUpload() {
 
       {saved && <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', textAlign: 'center' }}>✓ Menu saved!</p>}
 
-      <button onClick={() => setSaved(true)} style={{
+      <button onClick={() => { setSaved(true); setTimeout(() => navigate("/orders"), 1000); }} style={{
         width: '100%', padding: '14px',
         background: 'var(--color-ink)', color: 'var(--color-paper)',
         border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)',
