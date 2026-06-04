@@ -8,8 +8,8 @@ export default function OrderDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/api/orders').then((res) => {
-      setOrders(res.data.orders || []);
+    api.get('/api/orders/restaurant').then((res) => {
+      setOrders(res.data.data.orders || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -29,7 +29,6 @@ export default function OrderDashboard() {
       maxWidth: '500px',
       margin: '0 auto',
     }}>
-
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '32px' }}>Orders</h1>
         <button onClick={() => navigate('/menu')} style={{
@@ -40,29 +39,23 @@ export default function OrderDashboard() {
           fontSize: '14px',
           cursor: 'pointer',
           background: 'var(--color-paper)',
-        }}>
-          + Menu
-        </button>
+        }}>+ Menu</button>
       </div>
 
       {loading && <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)' }}>Loading...</p>}
 
       {!loading && orders.length === 0 && (
         <div style={{ textAlign: 'center', marginTop: '80px' }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '18px', color: 'var(--color-pencil)' }}>
-            No orders yet.
-          </p>
-          <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-light)', marginTop: '8px' }}>
-            Orders will appear here when customers place them.
-          </p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '18px', color: 'var(--color-pencil)' }}>No orders yet.</p>
+          <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-light)', marginTop: '8px' }}>Orders will appear here when customers place them.</p>
         </div>
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {orders.map((order) => (
           <div
-            key={order.order_id}
-            onClick={() => navigate(`/orders/${order.order_id}`)}
+            key={order.id}
+            onClick={() => navigate(`/orders/${order.id}`)}
             style={{
               border: '2px solid var(--color-ink)',
               borderRadius: 'var(--radius)',
@@ -75,7 +68,7 @@ export default function OrderDashboard() {
           >
             <div>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>
-                Order #{order.order_id?.slice(0, 8)}
+                Order #{order.order_number?.slice(0, 8) || order.id?.slice(0, 8)}
               </p>
               <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', marginTop: '4px' }}>
                 {order.guest_count} people · ${order.total_amount}
@@ -94,7 +87,6 @@ export default function OrderDashboard() {
           </div>
         ))}
       </div>
-
     </div>
   );
 }
