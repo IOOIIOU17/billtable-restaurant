@@ -8,8 +8,11 @@ export default function OrderDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/api/orders/restaurant').then((res) => {
-      setOrders(res.data.data.orders || []);
+    const token = localStorage.getItem('restaurantToken');
+    api.get('/api/orders/restaurant', {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then((res) => {
+      setOrders(res.data.orders || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -22,24 +25,10 @@ export default function OrderDashboard() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--color-paper)',
-      padding: '32px',
-      maxWidth: '500px',
-      margin: '0 auto',
-    }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-paper)', padding: '32px', maxWidth: '500px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '32px' }}>Orders</h1>
-        <button onClick={() => navigate('/menu')} style={{
-          padding: '8px 16px',
-          border: '2px solid var(--color-ink)',
-          borderRadius: 'var(--radius)',
-          fontFamily: 'var(--font-body)',
-          fontSize: '14px',
-          cursor: 'pointer',
-          background: 'var(--color-paper)',
-        }}>+ Menu</button>
+        <button onClick={() => navigate('/menu')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>+ Menu</button>
       </div>
 
       {loading && <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)' }}>Loading...</p>}
@@ -56,34 +45,13 @@ export default function OrderDashboard() {
           <div
             key={order.id}
             onClick={() => navigate(`/orders/${order.id}`)}
-            style={{
-              border: '2px solid var(--color-ink)',
-              borderRadius: 'var(--radius)',
-              padding: '16px',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
+            style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <div>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>
-                Order #{order.order_number?.slice(0, 8) || order.id?.slice(0, 8)}
-              </p>
-              <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', marginTop: '4px' }}>
-                {order.guest_count} people · ${order.total_amount}
-              </p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>Order #{order.order_number?.slice(0, 8) || order.id?.slice(0, 8)}</p>
+              <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', marginTop: '4px' }}>{order.guest_count} people · ${order.total_amount}</p>
             </div>
-            <span style={{
-              fontFamily: 'var(--font-hint)',
-              fontSize: '13px',
-              color: statusColor(order.status),
-              border: '1px solid var(--color-light)',
-              borderRadius: '999px',
-              padding: '4px 12px',
-            }}>
-              {order.status}
-            </span>
+            <span style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: statusColor(order.status), border: '1px solid var(--color-light)', borderRadius: '999px', padding: '4px 12px' }}>{order.status}</span>
           </div>
         ))}
       </div>
