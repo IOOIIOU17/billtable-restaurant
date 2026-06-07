@@ -12,7 +12,7 @@ export default function OrderDashboard() {
     api.get('/api/orders/restaurant', {
       headers: { Authorization: `Bearer ${token}` }
     }).then((res) => {
-      setOrders(res.data.orders || []);
+      setOrders(res.data.data.orders || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -48,7 +48,7 @@ export default function OrderDashboard() {
             style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <div>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>Order #{order.order_number?.slice(0, 8) || order.id?.slice(0, 8)}</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>Order #{order.order_number?.slice(0, 8) || order.id?.toString().slice(0, 8)}</p>
               <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', marginTop: '4px' }}>{order.guest_count} people · ${order.total_amount}</p>
             </div>
             <span style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: statusColor(order.status), border: '1px solid var(--color-light)', borderRadius: '999px', padding: '4px 12px' }}>{order.status}</span>
