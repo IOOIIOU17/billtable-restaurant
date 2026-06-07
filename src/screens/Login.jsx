@@ -29,7 +29,7 @@ export default function Login() {
           email: form.email,
           password: form.password,
         });
-        setToken(res.data.accessToken);
+        setToken(res.data.accessToken); localStorage.setItem("restaurantToken", res.data.accessToken);
         setRestaurant(res.data.user);
         navigate('/orders');
       } else {
@@ -38,7 +38,7 @@ export default function Login() {
           email: form.email,
           password: form.password,
         });
-        setToken(res.data.accessToken);
+        setToken(res.data.accessToken); localStorage.setItem("restaurantToken", res.data.accessToken);
         setRestaurant(res.data.user);
         navigate('/orders');
       }
