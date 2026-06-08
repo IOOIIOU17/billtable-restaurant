@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-export default function OrderDetails() {
+export default function OrderStatus() {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -16,33 +16,15 @@ export default function OrderDetails() {
     }).catch(console.error);
   }, [orderId]);
 
-  const handleAccept = async () => {
+  const markDelivered = async () => {
     const token = localStorage.getItem('restaurantToken');
-    await api.patch(`/api/orders/${orderId}/status`, { status: 'accepted' }, {
+    await api.patch(`/api/orders/${orderId}/status`, { status: 'delivered' }, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    navigate(`/orders/${orderId}/status`);
-  };
-
-  const handleReject = async () => {
-    const token = localStorage.getItem('restaurantToken');
-    await api.patch(`/api/orders/${orderId}/status`, { status: 'cancelled' }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    setOrder({ ...order, status: 'cancelled' });
+    setOrder({ ...order, status: 'delivered' });
   };
 
   if (!order) return <div style={{ padding: '32px', fontFamily: 'var(--font-body)' }}>Loading...</div>;
-
-  const rows = [
-    { label: 'Status', value: order.status },
-    { label: 'Guests', value: `${order.guest_count} people` },
-    { label: 'Total', value: `$${order.total_amount}` },
-    { label: 'Theme', value: order.theme || '-' },
-    { label: 'Allergy', value: order.allergies || 'None' },
-    { label: 'Delivery', value: order.delivery_address || '-' },
-    { label: 'Time', value: order.delivery_time || '-' },
-  ];
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-paper)', padding: '32px', maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -50,15 +32,31 @@ export default function OrderDetails() {
 
       <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '28px' }}>Order #{orderId?.toString().slice(0, 8)}</h1>
 
-      <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {rows.map((r) => (
-          <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-light)', paddingBottom: '8px' }}>
-            <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>{r.label}</span>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>{r.value}</span>
-          </div>
-        ))}
+      {/* Status Badge */}
+      <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '20px', textAlign: 'center' }}>
+        <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)', marginBottom: '8px' }}>Status</p>
+        <p style={{ fontFamily: 'var(--font-logo)', fontSize: '28px', color: 'var(--color-ink)' }}>
+          {order.status === 'accepted' ? '🍳 Cooking' : order.status === 'delivered' ? '✅ Delivered' : order.status}
+        </p>
       </div>
 
+      {/* Order Info */}
+      <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-light)', paddingBottom: '8px' }}>
+          <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>Guests</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>{order.guest_count} people</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-light)', paddingBottom: '8px' }}>
+          <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>Delivery</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px', textAlign: 'right', maxWidth: '60%' }}>{order.delivery_address || '-'}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>Time</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px' }}>{order.delivery_time || '-'}</span>
+        </div>
+      </div>
+
+      {/* Menu */}
       {order.items && order.items.length > 0 && (
         <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px' }}>
           <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)', marginBottom: '12px' }}>Menu</p>
@@ -71,20 +69,16 @@ export default function OrderDetails() {
         </div>
       )}
 
-      {order.status === 'pending' && (
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={handleAccept} style={{ flex: 1, padding: '14px', background: 'var(--color-ink)', color: 'var(--color-paper)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>Accept</button>
-          <button onClick={handleReject} style={{ flex: 1, padding: '14px', background: 'var(--color-paper)', color: 'var(--color-ink)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>Reject</button>
-        </div>
+      {/* Deliver Complete Button */}
+      {order.status !== 'delivered' && (
+        <button onClick={markDelivered} style={{ width: '100%', padding: '16px', background: 'var(--color-ink)', color: 'var(--color-paper)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '18px', cursor: 'pointer' }}>
+          Deliver Complete ✓
+        </button>
       )}
 
-      {order.status === 'accepted' && (
-        <button onClick={() => navigate(`/orders/${orderId}/status`)} style={{ width: '100%', padding: '14px', background: 'var(--color-ink)', color: 'var(--color-paper)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>View Status →</button>
-      )}
-
-      {order.status === 'cancelled' && (
+      {order.status === 'delivered' && (
         <div style={{ textAlign: 'center', padding: '16px', fontFamily: 'var(--font-logo)', fontSize: '20px', color: 'var(--color-ink)' }}>
-          ❌ Order Rejected
+          🎉 Order Complete!
         </div>
       )}
     </div>

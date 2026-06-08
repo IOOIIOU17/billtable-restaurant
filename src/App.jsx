@@ -3,6 +3,7 @@ import Login from './screens/Login';
 import MenuUpload from './screens/MenuUpload';
 import OrderDashboard from './screens/OrderDashboard';
 import OrderDetails from './screens/OrderDetails';
+import OrderStatus from './screens/OrderStatus';
 import RefundPanel from './screens/RefundPanel';
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/menu" element={<MenuUpload />} />
         <Route path="/orders" element={<OrderDashboard />} />
         <Route path="/orders/:orderId" element={<OrderDetails />} />
+        <Route path="/orders/:orderId/status" element={<OrderStatus />} />
         <Route path="/orders/:orderId/refund" element={<RefundPanel />} />
       </Routes>
     </BrowserRouter>
