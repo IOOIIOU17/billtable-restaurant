@@ -119,7 +119,7 @@ export default function MenuUpload() {
       <button onClick={() => navigate('/orders')} style={{ background: 'none', border: 'none', fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)', cursor: 'pointer', marginBottom: '16px' }}>← Back</button>
 
       <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '28px', marginBottom: '24px' }}>
-        {editId ? '✏️ Edit Menu Item' : '📋 Upload your menu'}
+        {editId ? 'Edit Menu Item' : 'Upload your menu'}
       </h1>
 
       <div style={{ marginBottom: '16px' }}>
@@ -127,7 +127,7 @@ export default function MenuUpload() {
           <div style={{ width: '100%', height: '180px', border: '2px dashed var(--color-ink)', borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#f9f9f9' }}>
             {imagePreview
               ? <img src={imagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <span style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', fontSize: '14px' }}>📷 Tap to upload photo</span>
+              : <span style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', fontSize: '14px' }}>Tap to upload photo</span>
             }
           </div>
           <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
