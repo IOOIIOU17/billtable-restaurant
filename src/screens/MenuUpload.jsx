@@ -184,10 +184,10 @@ export default function MenuUpload() {
               {menu.description && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '4px 0' }}>{menu.description}</p>}
               <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
                 <button onClick={() => handleToggleAvailable(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>
-                  {menu.available !== false ? '✅ Available' : '❌ Unavailable'}
+                  {menu.available !== false ? 'Available' : 'Unavailable'}
                 </button>
-                <button onClick={() => handleEdit(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>✏️ Edit</button>
-                <button onClick={() => handleDelete(menu.id)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid red', color: 'red', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>🗑️ Delete</button>
+                <button onClick={() => handleEdit(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}> Edit</button>
+                <button onClick={() => handleDelete(menu.id)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid red', color: 'red', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>️ Delete</button>
               </div>
             </div>
           </div>
