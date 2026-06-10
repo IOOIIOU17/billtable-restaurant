@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import logo from '../assets/billtable-logo.png';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function Login() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px', maxWidth: '400px', margin: '0 auto' }}>
-      <img src='/src/assets/billtable-logo.png' alt='BillTable' style={{ width: '180px', marginBottom: '8px' }} />
+      <img src={logo} alt='BillTable' style={{ width: '180px', marginBottom: '8px' }} />
     <p style={{ fontFamily: 'var(--font-body)', fontSize: '18px', color: 'var(--color-pencil)', marginBottom: '24px' }}>Restaurant login</p>
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <input style={inputStyle} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
