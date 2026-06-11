@@ -1,0 +1,90 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../services/api'
+
+export default function RestaurantSettings() {
+  const navigate = useNavigate()
+  const [settings, setSettings] = useState({ name:'', phone:'', address:'', city:'', is_active:true, open_time:'09:00', close_time:'21:00', delivery_radius:10 })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  useEffect(() => {
+    api.get('/api/auth/me').then(r => {
+      const user = r.data?.user || r.data
+      if (user?.restaurantId || user?.restaurant_id) {
+        const rid = user.restaurantId || user.restaurant_id
+        api.get(`/api/restaurants/${rid}`).then(r2 => {
+          const rest = r2.data?.restaurant || r2.data?.data || r2.data
+          if (rest) setSettings(p => ({ ...p, name: rest.name||'', phone: rest.phone||'', address: rest.address||'', city: rest.city||'', is_active: rest.is_active ?? true }))
+        })
+      }
+    }).catch(() => {}).finally(() => setLoading(false))
+  }, [])
+
+  const save = () => {
+    setSaving(true)
+    api.get('/api/auth/me').then(r => {
+      const user = r.data?.user || r.data
+      const rid = user?.restaurantId || user?.restaurant_id
+      return api.put(`/api/restaurants/${rid}`, settings)
+    }).then(() => {
+      setMsg('Saved ✓')
+      setTimeout(() => setMsg(''), 2000)
+    }).catch(() => setMsg('Save error')).finally(() => setSaving(false))
+  }
+
+  const input = (label, val, onChange, type='text') => (
+    <div style={{ display:'grid', gap:'4px' }}>
+      <label style={{ fontFamily:"'Kalam',sans-serif", fontSize:'0.85rem', color:'#4A4A4A' }}>{label}</label>
+      <input type={type} value={val} onChange={e => onChange(e.target.value)} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'8px 12px', border:'2px solid #1A1A1A', borderRadius:'8px', fontSize:'0.9rem', background:'#FEFEFE' }} />
+    </div>
+  )
+
+  if (loading) return <p style={{ padding:'24px', fontFamily:"'Kalam',sans-serif" }}>Loading...</p>
+
+  return (
+    <div style={{ padding:'24px', maxWidth:'600px', margin:'0 auto' }}>
+      <div style={{ display:'flex', gap:'12px', marginBottom:'24px', alignItems:'center' }}>
+        <button onClick={() => navigate('/orders')} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'8px 16px', border:'2px solid #1A1A1A', borderRadius:'8px', background:'transparent', cursor:'pointer' }}>← Back</button>
+        <h2 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.8rem', margin:0 }}>Restaurant Settings</h2>
+      </div>
+
+      <div style={{ background:'#fff', border:'2px solid #1A1A1A', borderRadius:'16px', padding:'24px', display:'grid', gap:'16px' }}>
+        <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:0 }}>Basic Info</h3>
+        {input('Restaurant Name', settings.name, v => setSettings(p=>({...p,name:v})))}
+        {input('Phone', settings.phone, v => setSettings(p=>({...p,phone:v})))}
+        {input('Address', settings.address, v => setSettings(p=>({...p,address:v})))}
+        {input('City', settings.city, v => setSettings(p=>({...p,city:v})))}
+
+        <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Hours & Delivery</h3>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
+            {input('Open Time', settings.open_time, v => setSettings(p=>({...p,open_time:v})), 'time')}
+            {input('Close Time', settings.close_time, v => setSettings(p=>({...p,close_time:v})), 'time')}
+          </div>
+          <div style={{ marginTop:'12px' }}>
+            {input('Delivery Radius (miles)', settings.delivery_radius, v => setSettings(p=>({...p,delivery_radius:v})), 'number')}
+          </div>
+        </div>
+
+        <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Status</h3>
+          <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+            <span style={{ fontFamily:"'Patrick Hand',sans-serif" }}>Restaurant is:</span>
+            <button onClick={() => setSettings(p=>({...p,is_active:!p.is_active}))} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'6px 20px', border:'2px solid #1A1A1A', borderRadius:'20px', background: settings.is_active ? '#16a34a' : '#6b7280', color:'#fff', cursor:'pointer', fontSize:'0.9rem' }}>
+              {settings.is_active ? 'Open' : 'Closed'}
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display:'flex', gap:'12px', alignItems:'center', borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <button onClick={save} disabled={saving} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background:'#1A1A1A', color:'#fff', cursor:'pointer', fontSize:'0.95rem' }}>
+            {saving ? 'Saving...' : 'Save Settings'}
+          </button>
+          {msg && <span style={{ fontFamily:"'Kalam',sans-serif", color: msg.includes('✓') ? '#16a34a' : '#dc2626' }}>{msg}</span>}
+        </div>
+      </div>
+    </div>
+  )
+}

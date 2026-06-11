@@ -5,6 +5,8 @@ import OrderDashboard from './screens/OrderDashboard';
 import OrderDetails from './screens/OrderDetails';
 import OrderStatus from './screens/OrderStatus';
 import RefundPanel from './screens/RefundPanel';
+import OrderHistory from './screens/OrderHistory';
+import RestaurantSettings from './screens/RestaurantSettings';
 
 export default function App() {
   return (
@@ -16,6 +18,8 @@ export default function App() {
         <Route path="/orders/:orderId" element={<OrderDetails />} />
         <Route path="/orders/:orderId/status" element={<OrderStatus />} />
         <Route path="/orders/:orderId/refund" element={<RefundPanel />} />
+        <Route path="/history" element={<OrderHistory />} />
+        <Route path="/settings" element={<RestaurantSettings />} />
       </Routes>
     </BrowserRouter>
   );
