@@ -4,50 +4,41 @@ import api from '../services/api'
 
 export default function RestaurantSettings() {
   const navigate = useNavigate()
-  const [settings, setSettings] = useState({ name:'', phone:'', address:'', city:'', is_active:true, open_time:'09:00', close_time:'21:00', delivery_radius:10 })
+  const [settings, setSettings] = useState({ id:null, name:'', phone:'', address:'', city:'', is_active:true, open_time:'09:00', close_time:'21:00', delivery_radius:10 })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
 
   useEffect(() => {
-    api.get('/api/auth/me').then(r => {
-      const user = r.data?.user || r.data
-      if (user?.restaurantId || user?.restaurant_id) {
-        const rid = user.restaurantId || user.restaurant_id
-        api.get(`/api/restaurants/${rid}`).then(r2 => {
-          const rest = r2.data?.restaurant || r2.data?.data || r2.data
-          if (rest) setSettings(p => ({
-            ...p,
-            name: rest.name||'',
-            phone: rest.phone||'',
-            address: rest.address||'',
-            city: rest.city||'',
-            is_active: rest.is_active ?? true,
-            open_time: rest.business_hours?.open || p.open_time,
-            close_time: rest.business_hours?.close || p.close_time,
-            delivery_radius: rest.delivery_radius_miles ?? p.delivery_radius
-          }))
-        })
-      }
+    api.get('/api/restaurants/mine').then(r => {
+      const rest = r.data?.restaurants?.[0]
+      if (rest) setSettings(p => ({
+        ...p,
+        id: rest.id,
+        name: rest.name||'',
+        phone: rest.phone||'',
+        address: rest.address||'',
+        city: rest.city||'',
+        is_active: rest.is_active ?? true,
+        open_time: rest.business_hours?.open || p.open_time,
+        close_time: rest.business_hours?.close || p.close_time,
+        delivery_radius: rest.delivery_radius_miles ?? p.delivery_radius
+      }))
     }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
   const save = () => {
     setSaving(true)
-    api.get('/api/auth/me').then(r => {
-      const user = r.data?.user || r.data
-      const rid = user?.restaurantId || user?.restaurant_id
-      const payload = {
-        name: settings.name,
-        phone: settings.phone,
-        address: settings.address,
-        city: settings.city,
-        isActive: settings.is_active,
-        deliveryRadiusMiles: settings.delivery_radius,
-        businessHours: { open: settings.open_time, close: settings.close_time }
-      }
-      return api.put(`/api/restaurants/${rid}`, payload)
-    }).then(() => {
+    const payload = {
+      name: settings.name,
+      phone: settings.phone,
+      address: settings.address,
+      city: settings.city,
+      isActive: settings.is_active,
+      deliveryRadiusMiles: settings.delivery_radius,
+      businessHours: { open: settings.open_time, close: settings.close_time }
+    }
+    api.patch(`/api/restaurants/${settings.id}`, payload).then(() => {
       setMsg('Saved ✓')
       setTimeout(() => setMsg(''), 2000)
     }).catch(() => setMsg('Save error')).finally(() => setSaving(false))
