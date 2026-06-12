@@ -82,7 +82,7 @@ export default function MenuUpload() {
 
   const handleEdit = (menu) => {
     setEditId(menu.id);
-    setForm({ name: menu.name, description: menu.description || '', price: menu.price, category: menu.category || 'Main', available: menu.available !== false });
+    setForm({ name: menu.name, description: menu.description || '', price: menu.price, category: menu.category || 'Main', available: menu.is_available !== false });
     setImagePreview(menu.image_url || null);
     setImageFile(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -100,7 +100,7 @@ export default function MenuUpload() {
 
   const handleToggleAvailable = async (menu) => {
     try {
-      await api.patch(`/api/menus/${menu.id}/availability`, { isAvailable: menu.available === false });
+      await api.patch(`/api/menus/${menu.id}/availability`, { isAvailable: menu.is_available === false });
       fetchMenus();
     } catch (err) {
       setMessage('Error updating availability.');
@@ -168,7 +168,7 @@ export default function MenuUpload() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {menus.map((menu) => (
-          <div key={menu.id} style={{ display: 'flex', gap: '12px', padding: '12px', border: '1.5px solid var(--color-light)', borderRadius: 'var(--radius)', opacity: menu.available === false ? 0.5 : 1 }}>
+          <div key={menu.id} style={{ display: 'flex', gap: '12px', padding: '12px', border: '1.5px solid var(--color-light)', borderRadius: 'var(--radius)', opacity: menu.is_available === false ? 0.5 : 1 }}>
             {menu.image_url
               ? <img src={menu.image_url} alt={menu.name} style={{ width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} />
               : <div style={{ width: '72px', height: '72px', borderRadius: '8px', background: '#f0f0f0', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>🍽️</div>
@@ -183,8 +183,8 @@ export default function MenuUpload() {
               </div>
               {menu.description && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '4px 0' }}>{menu.description}</p>}
               <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-                <button onClick={() => handleToggleAvailable(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>
-                  {menu.available !== false ? 'Available' : 'Unavailable'}
+                <button onClick={() => handleToggleAvailable(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: menu.is_available === false ? '#fee2e2' : 'none', color: menu.is_available === false ? '#dc2626' : 'var(--color-ink)', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>
+                  {menu.is_available !== false ? 'Hold' : 'On Hold'}
                 </button>
                 <button onClick={() => handleEdit(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}> Edit</button>
                 <button onClick={() => handleDelete(menu.id)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid red', color: 'red', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>️ Delete</button>
