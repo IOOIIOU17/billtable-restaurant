@@ -10,7 +10,7 @@ export default function OrderHistory() {
 
   useEffect(() => {
     api.get('/api/orders/restaurant').then(r => {
-      const data = r.data?.orders || r.data?.data || r.data || []
+      const data = r.data?.data?.orders || r.data?.orders || r.data?.data || r.data || []
       setOrders(Array.isArray(data) ? data : [])
     }).catch(() => setOrders([])).finally(() => setLoading(false))
   }, [])
