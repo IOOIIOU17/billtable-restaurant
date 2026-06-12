@@ -99,10 +99,12 @@ export default function MenuUpload() {
   };
 
   const handleToggleAvailable = async (menu) => {
+    const newValue = menu.is_available === false;
+    setMenus(prev => prev.map(m => m.id === menu.id ? { ...m, is_available: newValue } : m));
     try {
-      await api.patch(`/api/menus/${menu.id}/availability`, { isAvailable: menu.is_available === false });
-      fetchMenus();
+      await api.patch(`/api/menus/${menu.id}/availability`, { isAvailable: newValue });
     } catch (err) {
+      setMenus(prev => prev.map(m => m.id === menu.id ? { ...m, is_available: !newValue } : m));
       setMessage('Error updating availability.');
     }
   };
@@ -183,8 +185,8 @@ export default function MenuUpload() {
               </div>
               {menu.description && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '4px 0' }}>{menu.description}</p>}
               <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-                <button onClick={() => handleToggleAvailable(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: menu.is_available === false ? '#fee2e2' : 'none', color: menu.is_available === false ? '#dc2626' : 'var(--color-ink)', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>
-                  {menu.is_available !== false ? 'Hold' : 'On Hold'}
+                <button onClick={() => handleToggleAvailable(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: menu.is_available === false ? 'var(--color-ink)' : 'none', color: menu.is_available === false ? 'var(--color-paper)' : 'var(--color-ink)', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>
+                  Hold
                 </button>
                 <button onClick={() => handleEdit(menu)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid var(--color-ink)', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}> Edit</button>
                 <button onClick={() => handleDelete(menu.id)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '20px', border: '1px solid red', color: 'red', background: 'none', cursor: 'pointer', fontFamily: 'var(--font-hint)' }}>️ Delete</button>
