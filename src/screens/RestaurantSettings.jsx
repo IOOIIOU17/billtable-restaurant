@@ -16,7 +16,17 @@ export default function RestaurantSettings() {
         const rid = user.restaurantId || user.restaurant_id
         api.get(`/api/restaurants/${rid}`).then(r2 => {
           const rest = r2.data?.restaurant || r2.data?.data || r2.data
-          if (rest) setSettings(p => ({ ...p, name: rest.name||'', phone: rest.phone||'', address: rest.address||'', city: rest.city||'', is_active: rest.is_active ?? true }))
+          if (rest) setSettings(p => ({
+            ...p,
+            name: rest.name||'',
+            phone: rest.phone||'',
+            address: rest.address||'',
+            city: rest.city||'',
+            is_active: rest.is_active ?? true,
+            open_time: rest.business_hours?.open || p.open_time,
+            close_time: rest.business_hours?.close || p.close_time,
+            delivery_radius: rest.delivery_radius_miles ?? p.delivery_radius
+          }))
         })
       }
     }).catch(() => {}).finally(() => setLoading(false))
@@ -27,7 +37,16 @@ export default function RestaurantSettings() {
     api.get('/api/auth/me').then(r => {
       const user = r.data?.user || r.data
       const rid = user?.restaurantId || user?.restaurant_id
-      return api.put(`/api/restaurants/${rid}`, settings)
+      const payload = {
+        name: settings.name,
+        phone: settings.phone,
+        address: settings.address,
+        city: settings.city,
+        isActive: settings.is_active,
+        deliveryRadiusMiles: settings.delivery_radius,
+        businessHours: { open: settings.open_time, close: settings.close_time }
+      }
+      return api.put(`/api/restaurants/${rid}`, payload)
     }).then(() => {
       setMsg('Saved ✓')
       setTimeout(() => setMsg(''), 2000)
