@@ -16,10 +16,10 @@ export default function OrderHistory() {
   }, [])
 
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter)
-  const statuses = ['all', 'pending', 'accepted', 'preparing', 'delivered', 'cancelled']
+  const statuses = ['all', 'pending', 'accepted', 'delivered', 'cancelled']
 
   const statusColor = (s) => ({
-    pending: '#f59e0b', accepted: '#3b82f6', preparing: '#8b5cf6',
+    pending: '#f59e0b', accepted: '#3b82f6',
     delivered: '#16a34a', cancelled: '#dc2626'
   }[s] || '#4A4A4A')
 
