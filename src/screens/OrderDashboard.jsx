@@ -6,13 +6,21 @@ export default function OrderDashboard() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [restaurantName, setRestaurantName] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('restaurantToken');
     api.get('/api/orders/restaurant', {
       headers: { Authorization: `Bearer ${token}` }
     }).then((res) => {
-      setOrders(res.data.data.orders || []);
+      const data = res.data.data.orders || [];
+      setOrders(data);
+      if (data.length > 0) {
+        const rid = data[0].restaurant_id;
+        api.get(`/api/restaurants/${rid}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).then(r => setRestaurantName(r.data.data?.restaurant?.name || r.data.data?.name || '')).catch(() => {});
+      }
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -27,7 +35,10 @@ export default function OrderDashboard() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-paper)', padding: '32px', maxWidth: '500px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '32px' }}>Orders</h1>
+        <div>
+          <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '32px', margin: 0 }}>Orders</h1>
+          {restaurantName && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '2px 0 0' }}>{restaurantName}</p>}
+        </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button onClick={() => navigate('/menu')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>+ Menu</button>
           <button onClick={() => navigate('/history')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>History</button>
