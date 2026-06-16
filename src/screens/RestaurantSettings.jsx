@@ -94,6 +94,13 @@ export default function RestaurantSettings() {
           </button>
           {msg && <span style={{ fontFamily:"'Kalam',sans-serif", color: msg.includes('✓') ? '#16a34a' : '#dc2626' }}>{msg}</span>}
         </div>
+
+        <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Account</h3>
+          <button onClick={() => { localStorage.removeItem('restaurantToken'); navigate('/login'); }} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #dc2626', borderRadius:'8px', background:'#fff', color:'#dc2626', cursor:'pointer', fontSize:'0.95rem' }}>
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   )
