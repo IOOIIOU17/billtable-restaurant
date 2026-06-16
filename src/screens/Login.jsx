@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { subscribePush } from '../services/pushNotification';
 import logo from '../assets/billtable-logo.png';
 
 export default function Login() {
@@ -21,6 +22,7 @@ export default function Login() {
       const token = res.data?.accessToken;
       if (token) {
         localStorage.setItem('restaurantToken', token);
+        subscribePush(api, 'restaurant');
         navigate('/orders');
       } else {
         setError('Login failed. No token received.');

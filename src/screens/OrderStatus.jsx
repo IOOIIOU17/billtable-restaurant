@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import api from '../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
@@ -15,6 +16,18 @@ export default function OrderStatus() {
       setOrder(res.data.data?.order || res.data.order || res.data.data || null);
     }).catch(console.error);
   }, [orderId]);
+
+  const notifyCustomer = async () => {
+    const token = localStorage.getItem('restaurantToken');
+    try {
+      await api.post('/api/notifications/notify-customer', { orderId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert('Customer has been notified!');
+    } catch (err) {
+      alert('Failed to notify customer');
+    }
+  };
 
   const markDelivered = async () => {
     const token = localStorage.getItem('restaurantToken');
@@ -69,6 +82,12 @@ export default function OrderStatus() {
         </div>
       )}
 
+      {/* Notify Customer Button */}
+      {order.status !== 'delivered' && (
+        <button onClick={notifyCustomer} style={{ width: '100%', padding: '16px', background: 'var(--color-paper)', color: 'var(--color-ink)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '18px', cursor: 'pointer', marginBottom: '12px' }}>
+          🚗 Notify Customer to Pick Up
+        </button>
+      )}
       {/* Deliver Complete Button */}
       {order.status !== 'delivered' && (
         <button onClick={markDelivered} style={{ width: '100%', padding: '16px', background: 'var(--color-ink)', color: 'var(--color-paper)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '18px', cursor: 'pointer' }}>
