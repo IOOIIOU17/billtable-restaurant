@@ -40,7 +40,7 @@ export default function RefundPanel() {
         {mode === 'full' ? 'ยกเลิก Order แล้ว' : `คืนเงิน ${percent}% แล้ว`}
       </p>
       <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', marginBottom: '32px' }}>
-        ลูกค้าจะได้รับการแจ้งเตือน
+        Customer will be notified
       </p>
       <button
         onClick={() => navigate('/orders')}
@@ -192,7 +192,7 @@ export default function RefundPanel() {
             opacity: loading ? 0.6 : 1,
           }}
         >
-          {loading ? 'กำลังดำเนินการ...' : mode === 'full' ? 'ยืนยันยกเลิก Order' : `ยืนยันคืนเงิน ${percent}%`}
+          {loading ? 'Processing...' : mode === 'full' ? 'Confirm Cancellation' : `Confirm Refund ${percent}%`}
         </button>
       )}
     </div>
