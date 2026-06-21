@@ -40,6 +40,7 @@ export default function OrderDetails() {
     { label: 'Total', value: `$${order.total_amount}` },
     { label: 'Theme', value: order.theme || '-' },
     { label: 'Allergy', value: order.allergies || 'None' },
+    { label: 'Comment', value: order.customer_comment || 'None' },
     { label: 'Delivery', value: order.delivery_address || '-' },
     { label: 'Time', value: order.delivery_time || '-' },
   ];
