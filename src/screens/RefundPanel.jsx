@@ -10,16 +10,20 @@ export default function RefundPanel() {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [error, setError] = useState('')
+
   const handleRefund = async () => {
     setLoading(true)
+    setError('')
     try {
-      await api.patch(`/api/orders/${orderId}/status`, {
-        status: mode === 'full' ? 'cancelled' : 'refunded',
-        refund_percent: mode === 'full' ? 100 : percent,
+      await api.post(`/api/orders/${orderId}/refund`, {
+        refundType: mode,
+        refundPercent: mode === 'partial' ? percent : 100,
       })
       setDone(true)
     } catch (e) {
       console.error(e)
+      setError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
     }
     setLoading(false)
   }
