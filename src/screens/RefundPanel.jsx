@@ -20,6 +20,10 @@ export default function RefundPanel() {
         refundType: mode,
         refundPercent: mode === 'partial' ? percent : 100,
       })
+      // แจ้งเตือนลูกค้าหลัง refund สำเร็จ (#57)
+      await api.post('/api/notifications/notify-customer', {
+        orderId,
+      }).catch(() => {})
       setDone(true)
     } catch (e) {
       console.error(e)
