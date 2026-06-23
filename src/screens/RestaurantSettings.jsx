@@ -28,7 +28,7 @@ function StripeOnboardButton({ restaurantId }) {
         disabled={loading}
         style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background: loading ? '#6b7280' : '#1A1A1A', color:'#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize:'0.95rem' }}
       >
-        {loading ? 'Connecting...' : '🏦 Connect Bank Account'}
+        {loading ? 'Connecting...' : 'Connect Bank Account'}
       </button>
       {status && <span style={{ fontFamily:"'Kalam',sans-serif", color:'#dc2626', fontSize:'0.85rem' }}>{status}</span>}
     </div>
