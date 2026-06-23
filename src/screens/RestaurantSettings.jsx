@@ -2,6 +2,39 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
+function StripeOnboardButton({ restaurantId }) {
+  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState('')
+
+  const handleOnboard = async () => {
+    if (!restaurantId) return
+    setLoading(true)
+    setStatus('')
+    try {
+      const res = await api.post('/api/restaurants/stripe-onboard')
+      if (res.data?.url) {
+        window.location.href = res.data.url
+      }
+    } catch (err) {
+      setStatus(err.response?.data?.message || 'Error connecting account')
+    }
+    setLoading(false)
+  }
+
+  return (
+    <div style={{ display:'flex', gap:'12px', alignItems:'center' }}>
+      <button
+        onClick={handleOnboard}
+        disabled={loading}
+        style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background: loading ? '#6b7280' : '#1A1A1A', color:'#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize:'0.95rem' }}
+      >
+        {loading ? 'Connecting...' : '🏦 Connect Bank Account'}
+      </button>
+      {status && <span style={{ fontFamily:"'Kalam',sans-serif", color:'#dc2626', fontSize:'0.85rem' }}>{status}</span>}
+    </div>
+  )
+}
+
 export default function RestaurantSettings() {
   const navigate = useNavigate()
   const [settings, setSettings] = useState({ id:null, name:'', phone:'', address:'', city:'', is_active:true, open_time:'09:00', close_time:'21:00', delivery_radius:10 })
@@ -93,6 +126,14 @@ export default function RestaurantSettings() {
             {saving ? 'Saving...' : 'Save Settings'}
           </button>
           {msg && <span style={{ fontFamily:"'Kalam',sans-serif", color: msg.includes('✓') ? '#16a34a' : '#dc2626' }}>{msg}</span>}
+        </div>
+
+        <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Payout Account</h3>
+          <p style={{ fontFamily:"'Kalam',sans-serif", fontSize:'0.85rem', color:'#4A4A4A', marginBottom:'12px' }}>
+            Connect your bank account to receive payments from BillTable.
+          </p>
+          <StripeOnboardButton restaurantId={settings.id} />
         </div>
 
         <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
