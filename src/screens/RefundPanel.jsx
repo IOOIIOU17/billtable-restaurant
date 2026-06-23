@@ -27,7 +27,7 @@ export default function RefundPanel() {
       setDone(true)
     } catch (e) {
       console.error(e)
-      setError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
+      setError('Something went wrong. Please try again.')
     }
     setLoading(false)
   }
@@ -45,7 +45,7 @@ export default function RefundPanel() {
     }}>
       <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
       <p style={{ fontFamily: 'var(--font-logo)', fontSize: '24px', marginBottom: '8px' }}>
-        {mode === 'full' ? 'ยกเลิก Order แล้ว' : `คืนเงิน ${percent}% แล้ว`}
+        {mode === 'full' ? 'Order Cancelled' : `Refund ${percent}% Processed`}
       </p>
       <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', marginBottom: '32px' }}>
         Customer will be notified
@@ -63,7 +63,7 @@ export default function RefundPanel() {
           cursor: 'pointer',
         }}
       >
-        กลับหน้า Orders
+        Back to Orders
       </button>
     </div>
   )
@@ -95,11 +95,11 @@ export default function RefundPanel() {
       </button>
 
       <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '28px', margin: '0' }}>
-        คืนเงิน Order #{orderId?.slice(0, 8)}
+        Refund Order #{orderId?.slice(0, 8)}
       </h1>
 
       <p style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', margin: '0' }}>
-        เลือกรูปแบบการคืนเงิน
+        Select refund type
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -117,7 +117,7 @@ export default function RefundPanel() {
             textAlign: 'left',
           }}
         >
-          💰 คืนเงินบางส่วน (เลือก %)
+          💰 Partial Refund (select %)
         </button>
 
         <button
@@ -134,7 +134,7 @@ export default function RefundPanel() {
             textAlign: 'left',
           }}
         >
-          🔄 ยกเลิก Order (คืน 100%)
+          🔄 Cancel Order (Full Refund)
         </button>
       </div>
 
@@ -148,7 +148,7 @@ export default function RefundPanel() {
           gap: '16px',
         }}>
           <p style={{ fontFamily: 'var(--font-body)', margin: '0' }}>
-            คืนเงิน: <strong>{percent}%</strong>
+            Refund: <strong>{percent}%</strong>
           </p>
           <input
             type="range"
