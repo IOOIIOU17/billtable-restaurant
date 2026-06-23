@@ -48,7 +48,7 @@ export default function OrderStatus() {
       <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '20px', textAlign: 'center' }}>
         <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)', marginBottom: '8px' }}>Status</p>
         <p style={{ fontFamily: 'var(--font-logo)', fontSize: '28px', color: 'var(--color-ink)' }}>
-          {order.status === 'accepted' ? '🍳 Cooking' : order.status === 'delivered' ? '✅ Delivered' : order.status}
+          {order.status === 'accepted' ? 'Cooking' : order.status === 'delivered' ? '✅ Delivered' : order.status}
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export default function OrderStatus() {
       {/* Notify Customer Button */}
       {order.status !== 'delivered' && (
         <button onClick={notifyCustomer} style={{ width: '100%', padding: '16px', background: 'var(--color-paper)', color: 'var(--color-ink)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '18px', cursor: 'pointer', marginBottom: '12px' }}>
-          🚗 Notify Customer to Pick Up
+          Notify Customer to Pick Up
         </button>
       )}
       {/* Deliver Complete Button */}
