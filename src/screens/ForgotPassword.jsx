@@ -42,7 +42,7 @@ export default function ForgotPassword() {
             onChange={e => setEmail(e.target.value)}
             style={{ padding:'14px 16px', border:'2px solid var(--color-ink)', borderRadius:'var(--radius)', fontFamily:"'Patrick Hand',sans-serif", fontSize:'16px', outline:'none' }}
           />
-          {error && <p style={{ fontFamily:"'Kalam',sans-serif", fontSize:'13px', color:'#dc2626' }}>{error}</p>}
+          {error && <p style={{ fontFamily:"'Kalam',sans-serif", fontSize:'13px', color:'var(--color-ink)' }}>{error}</p>}
           <button onClick={handleSubmit} disabled={loading} style={{ padding:'14px', background:'var(--color-ink)', color:'var(--color-paper)', border:'none', borderRadius:'var(--radius)', fontFamily:"'Patrick Hand',sans-serif", fontSize:'16px', cursor:'pointer' }}>
             {loading ? 'Sending...' : 'Send reset link →'}
           </button>

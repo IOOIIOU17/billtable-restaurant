@@ -126,7 +126,7 @@ export default function MenuUpload() {
 
       <div style={{ marginBottom: '16px' }}>
         <label style={{ cursor: 'pointer', display: 'block' }}>
-          <div style={{ width: '100%', height: '180px', border: '2px dashed var(--color-ink)', borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#f9f9f9' }}>
+          <div style={{ width: '100%', height: '180px', border: '2px dashed var(--color-ink)', borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--color-light)' }}>
             {imagePreview
               ? <img src={imagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               : <span style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)', fontSize: '14px' }}>Tap to upload photo</span>
@@ -154,7 +154,7 @@ export default function MenuUpload() {
       {message && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: message.includes('Error') || message.includes('Please') ? 'red' : 'green', textAlign: 'center', marginBottom: '12px' }}>{message}</p>}
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
-        <button onClick={handleSubmit} disabled={loading} style={{ flex: 1, padding: '14px', background: loading ? '#999' : 'var(--color-ink)', color: 'var(--color-paper)', border: 'none', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer' }}>
+        <button onClick={handleSubmit} disabled={loading} style={{ flex: 1, padding: '14px', background: loading ? 'var(--color-pencil)' : 'var(--color-ink)', color: 'var(--color-paper)', border: 'none', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer' }}>
           {loading ? 'Saving...' : editId ? 'Update Menu' : '+ Add dish'}
         </button>
         {editId && (
@@ -173,7 +173,7 @@ export default function MenuUpload() {
           <div key={menu.id} style={{ display: 'flex', gap: '12px', padding: '12px', border: '1.5px solid var(--color-light)', borderRadius: 'var(--radius)', opacity: menu.is_available === false ? 0.5 : 1 }}>
             {menu.image_url
               ? <img src={menu.image_url} alt={menu.name} style={{ width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} />
-              : <div style={{ width: '72px', height: '72px', borderRadius: '8px', background: '#f0f0f0', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>🍽️</div>
+              : <div style={{ width: '72px', height: '72px', borderRadius: '8px', background: 'var(--color-light)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>🍽️</div>
             }
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

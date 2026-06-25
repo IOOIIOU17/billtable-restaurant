@@ -30,7 +30,7 @@ function StripeOnboardButton({ restaurantId }) {
       >
         {loading ? 'Connecting...' : 'Connect Bank Account'}
       </button>
-      {status && <span style={{ fontFamily:"'Kalam',sans-serif", color:'#dc2626', fontSize:'0.85rem' }}>{status}</span>}
+      {status && <span style={{ fontFamily:"'Kalam',sans-serif", color:'var(--color-ink)', fontSize:'0.85rem' }}>{status}</span>}
     </div>
   )
 }
@@ -115,7 +115,7 @@ export default function RestaurantSettings() {
           <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Status</h3>
           <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
             <span style={{ fontFamily:"'Patrick Hand',sans-serif" }}>Restaurant is:</span>
-            <button onClick={() => setSettings(p=>({...p,is_active:!p.is_active}))} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'6px 20px', border:'2px solid #1A1A1A', borderRadius:'20px', background: settings.is_active ? '#16a34a' : '#6b7280', color:'#fff', cursor:'pointer', fontSize:'0.9rem' }}>
+            <button onClick={() => setSettings(p=>({...p,is_active:!p.is_active}))} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'6px 20px', border:'2px solid #1A1A1A', borderRadius:'20px', background: settings.is_active ? 'var(--color-ink)' : '#6b7280', color:'#fff', cursor:'pointer', fontSize:'0.9rem' }}>
               {settings.is_active ? 'Open' : 'Closed'}
             </button>
           </div>
@@ -125,7 +125,7 @@ export default function RestaurantSettings() {
           <button onClick={save} disabled={saving} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background:'#1A1A1A', color:'#fff', cursor:'pointer', fontSize:'0.95rem' }}>
             {saving ? 'Saving...' : 'Save Settings'}
           </button>
-          {msg && <span style={{ fontFamily:"'Kalam',sans-serif", color: msg.includes('✓') ? '#16a34a' : '#dc2626' }}>{msg}</span>}
+          {msg && <span style={{ fontFamily:"'Kalam',sans-serif", color: msg.includes('✓') ? 'var(--color-ink)' : 'var(--color-ink)' }}>{msg}</span>}
         </div>
 
         <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
@@ -138,7 +138,7 @@ export default function RestaurantSettings() {
 
         <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
           <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Account</h3>
-          <button onClick={() => { localStorage.removeItem('restaurantToken'); navigate('/'); }} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #dc2626', borderRadius:'8px', background:'#fff', color:'#dc2626', cursor:'pointer', fontSize:'0.95rem' }}>
+          <button onClick={() => { localStorage.removeItem('restaurantToken'); navigate('/'); }} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid var(--color-ink)', borderRadius:'8px', background:'#fff', color:'var(--color-ink)', cursor:'pointer', fontSize:'0.95rem' }}>
             Logout
           </button>
         </div>

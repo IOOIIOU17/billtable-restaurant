@@ -19,8 +19,8 @@ export default function OrderHistory() {
   const statuses = ['all', 'pending', 'accepted', 'delivered', 'cancelled']
 
   const statusColor = (s) => ({
-    pending: '#f59e0b', accepted: '#3b82f6',
-    delivered: '#16a34a', cancelled: '#dc2626'
+    pending: 'var(--color-ink)', accepted: '#3b82f6',
+    delivered: 'var(--color-ink)', cancelled: 'var(--color-ink)'
   }[s] || '#4A4A4A')
 
   return (
