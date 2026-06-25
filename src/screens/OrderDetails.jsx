@@ -72,6 +72,30 @@ export default function OrderDetails() {
         </div>
       )}
 
+      {order.subtotal > 0 && (
+        <div style={{ border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <p style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)', marginBottom: '4px' }}>Invoice Summary</p>
+          {[
+            { label: 'Subtotal (food)', value: `$${parseFloat(order.subtotal||0).toFixed(2)}`, color: 'var(--color-ink)' },
+            { label: 'Platform fee (10%)', value: `-$${parseFloat(order.platform_fee||0).toFixed(2)}`, color: '#dc2626' },
+            { label: 'Delivery fee (5%)', value: `-$${parseFloat(order.delivery_fee_amount||0).toFixed(2)}`, color: '#dc2626' },
+          ].map(r => (
+            <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-light)', paddingBottom: '6px' }}>
+              <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>{r.label}</span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '15px', color: r.color }}>{r.value}</span>
+            </div>
+          ))}
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '4px' }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 'bold' }}>Your payout</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 'bold', color: '#16a34a' }}>${parseFloat(order.restaurant_payout||0).toFixed(2)}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', background: '#fefce8', borderRadius: '8px', padding: '8px 4px', marginTop: '4px' }}>
+            <span style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: '#92400e' }}>Tax collected ({order.tax_rate ? (parseFloat(order.tax_rate)*100).toFixed(2)+'%' : '8.75%'})</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: '#92400e' }}>${parseFloat(order.tax_amount||0).toFixed(2)} — remitted by BillTable</span>
+          </div>
+        </div>
+      )}
+
       {order.status === 'pending' && (
         <div style={{ display: 'flex', gap: '12px' }}>
           <button onClick={handleAccept} style={{ flex: 1, padding: '14px', background: 'var(--color-ink)', color: 'var(--color-paper)', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>Accept</button>

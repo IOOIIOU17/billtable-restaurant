@@ -2,6 +2,44 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+async function subscribeRestaurantPush(token) {
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) {
+      await api.post('/api/notifications/subscribe',
+        { subscription: existing, userType: 'restaurant' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return;
+    }
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
+    await api.post('/api/notifications/subscribe',
+      { subscription: sub, userType: 'restaurant' },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  } catch (err) {
+    console.error('Push subscribe failed:', err);
+  }
+}
+
 export default function OrderDashboard() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
@@ -10,6 +48,7 @@ export default function OrderDashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('restaurantToken');
+    subscribeRestaurantPush(token);
     api.get('/api/orders/restaurant', {
       headers: { Authorization: `Bearer ${token}` }
     }).then((res) => {
