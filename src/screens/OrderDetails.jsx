@@ -42,7 +42,7 @@ export default function OrderDetails() {
     { label: 'Allergy', value: order.allergies || 'None' },
     { label: 'Comment', value: order.customer_comment || 'None' },
     { label: 'Delivery', value: order.delivery_address || '-' },
-    { label: 'Time', value: order.delivery_time || '-' },
+    { label: 'Time', value: order.delivery_time ? new Date(order.delivery_time).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-' },
   ];
 
   return (
@@ -78,7 +78,6 @@ export default function OrderDetails() {
           {[
             { label: 'Subtotal (food)', value: `$${parseFloat(order.subtotal||0).toFixed(2)}`, color: 'var(--color-ink)' },
             { label: 'Platform fee (10%)', value: `-$${parseFloat(order.platform_fee||0).toFixed(2)}`, color: '#dc2626' },
-            { label: 'Delivery fee (5%)', value: `-$${parseFloat(order.delivery_fee_amount||0).toFixed(2)}`, color: '#dc2626' },
           ].map(r => (
             <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-light)', paddingBottom: '6px' }}>
               <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>{r.label}</span>
