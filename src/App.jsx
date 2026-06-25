@@ -7,6 +7,8 @@ import OrderStatus from './screens/OrderStatus';
 import RefundPanel from './screens/RefundPanel';
 import OrderHistory from './screens/OrderHistory';
 import RestaurantSettings from './screens/RestaurantSettings';
+import ForgotPassword from './screens/ForgotPassword';
+import ResetPassword from './screens/ResetPassword';
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
         <Route path="/orders/:orderId/refund" element={<RefundPanel />} />
         <Route path="/history" element={<OrderHistory />} />
         <Route path="/settings" element={<RestaurantSettings />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

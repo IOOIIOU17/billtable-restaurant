@@ -58,6 +58,7 @@ export default function Login() {
       <button onClick={handleSubmit} disabled={loading} style={{ width: '100%', background: 'var(--color-ink)', color: 'var(--color-paper)', border: 'none', borderRadius: 'var(--radius)', padding: '14px', fontFamily: 'var(--font-body)', fontSize: '18px', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '16px' }}>
         {loading ? 'Logging in...' : 'Login'}
       </button>
+      <p onClick={() => navigate('/forgot-password')} style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', marginTop: '16px', cursor: 'pointer', textDecoration: 'underline' }}>Forgot password?</p>
     </div>
   );
 }
