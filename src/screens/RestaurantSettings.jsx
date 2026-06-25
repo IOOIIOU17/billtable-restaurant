@@ -26,7 +26,7 @@ function StripeOnboardButton({ restaurantId }) {
       <button
         onClick={handleOnboard}
         disabled={loading}
-        style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background: loading ? '#6b7280' : '#1A1A1A', color:'#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize:'0.95rem' }}
+        style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background: loading ? 'var(--color-pencil)' : '#1A1A1A', color:'#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize:'0.95rem' }}
       >
         {loading ? 'Connecting...' : 'Connect Bank Account'}
       </button>
@@ -115,7 +115,7 @@ export default function RestaurantSettings() {
           <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Status</h3>
           <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
             <span style={{ fontFamily:"'Patrick Hand',sans-serif" }}>Restaurant is:</span>
-            <button onClick={() => setSettings(p=>({...p,is_active:!p.is_active}))} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'6px 20px', border:'2px solid #1A1A1A', borderRadius:'20px', background: settings.is_active ? 'var(--color-ink)' : '#6b7280', color:'#fff', cursor:'pointer', fontSize:'0.9rem' }}>
+            <button onClick={() => setSettings(p=>({...p,is_active:!p.is_active}))} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'6px 20px', border:'2px solid #1A1A1A', borderRadius:'20px', background: settings.is_active ? 'var(--color-ink)' : 'var(--color-pencil)', color:'#fff', cursor:'pointer', fontSize:'0.9rem' }}>
               {settings.is_active ? 'Open' : 'Closed'}
             </button>
           </div>

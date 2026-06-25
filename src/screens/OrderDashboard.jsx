@@ -65,7 +65,7 @@ export default function OrderDashboard() {
   }, []);
 
   const statusColor = (status) => {
-    if (status === 'pending') return '#888';
+    if (status === 'pending') return 'var(--color-pencil)';
     if (status === 'accepted') return '#1A1A1A';
     if (status === 'delivered') return '#1A1A1A';
     return '#4A4A4A';
