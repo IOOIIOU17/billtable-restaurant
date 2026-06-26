@@ -21,3 +21,13 @@ body {
   font-family: var(--font-body);
   min-height: 100vh;
 }
+
+/* Safari/iPhone override — force black & white everywhere */
+a {
+  color: var(--color-ink);
+  -webkit-text-fill-color: var(--color-ink);
+}
+button {
+  -webkit-appearance: none;
+  color: inherit;
+}
