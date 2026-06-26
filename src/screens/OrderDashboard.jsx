@@ -78,11 +78,15 @@ export default function OrderDashboard() {
           <h1 style={{ fontFamily: 'var(--font-logo)', fontSize: '32px', margin: 0 }}>Orders</h1>
           {restaurantName && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '2px 0 0' }}>{restaurantName}</p>}
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => navigate('/menu')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>+ Menu</button>
-          <button onClick={() => navigate('/history')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>History</button>
-          <button onClick={() => navigate('/settings')} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-paper)' }}>Settings</button>
-          <button onClick={() => { localStorage.removeItem('restaurantToken'); navigate('/'); }} style={{ padding: '8px 16px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '14px', cursor: 'pointer', background: 'var(--color-ink)', color: 'var(--color-paper)' }}>Logout</button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button onClick={() => navigate('/menu')} style={{ padding: '6px 12px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '13px', cursor: 'pointer', background: 'var(--color-paper)', color: 'var(--color-ink)' }}>+ Menu</button>
+            <button onClick={() => navigate('/history')} style={{ padding: '6px 12px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '13px', cursor: 'pointer', background: 'var(--color-paper)', color: 'var(--color-ink)' }}>History</button>
+          </div>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button onClick={() => navigate('/settings')} style={{ padding: '6px 12px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '13px', cursor: 'pointer', background: 'var(--color-paper)', color: 'var(--color-ink)' }}>Settings</button>
+            <button onClick={() => { localStorage.removeItem('restaurantToken'); navigate('/'); }} style={{ padding: '6px 12px', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '13px', cursor: 'pointer', background: 'var(--color-ink)', color: 'var(--color-paper)' }}>Logout</button>
+          </div>
         </div>
       </div>
 
