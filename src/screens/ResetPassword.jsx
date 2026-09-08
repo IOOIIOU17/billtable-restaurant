@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 
@@ -11,6 +11,16 @@ export default function ResetPassword() {
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // A restaurant reading the email on the phone should land in the app,
+  // already holding the code. If the app is not installed nothing happens
+  // and this page keeps working on its own.
+  useEffect(() => {
+    if (!token) return;
+    const onPhone = /iPhone|iPad|Android/i.test(navigator.userAgent);
+    if (!onPhone) return;
+    window.location.href = `billtablerestaurant://reset-password?token=${token}`;
+  }, [token]);
 
   const handleSubmit = async () => {
     if (!newPassword || !confirm) { setError('Please fill in all fields'); return; }
