@@ -41,22 +41,28 @@ export default function RestaurantSettings() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
+  const [deletionRequestedAt, setDeletionRequestedAt] = useState(null)
+  const [deletionMsg, setDeletionMsg] = useState('')
+  const [deletionLoading, setDeletionLoading] = useState(false)
 
   useEffect(() => {
     api.get('/api/restaurants/mine').then(r => {
       const rest = r.data?.restaurants?.[0]
-      if (rest) setSettings(p => ({
-        ...p,
-        id: rest.id,
-        name: rest.name||'',
-        phone: rest.phone||'',
-        address: rest.address||'',
-        city: rest.city||'',
-        is_active: rest.is_active ?? true,
-        open_time: rest.business_hours?.open || p.open_time,
-        close_time: rest.business_hours?.close || p.close_time,
-        delivery_radius: rest.delivery_radius_miles ?? p.delivery_radius
-      }))
+      if (rest) {
+        setSettings(p => ({
+          ...p,
+          id: rest.id,
+          name: rest.name||'',
+          phone: rest.phone||'',
+          address: rest.address||'',
+          city: rest.city||'',
+          is_active: rest.is_active ?? true,
+          open_time: rest.business_hours?.open || p.open_time,
+          close_time: rest.business_hours?.close || p.close_time,
+          delivery_radius: rest.delivery_radius_miles ?? p.delivery_radius
+        }))
+        setDeletionRequestedAt(rest.deletion_requested_at || null)
+      }
     }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
@@ -75,6 +81,30 @@ export default function RestaurantSettings() {
       setMsg('Saved ✓')
       setTimeout(() => setMsg(''), 2000)
     }).catch(() => setMsg('Save error')).finally(() => setSaving(false))
+  }
+
+  // Permanent deletion is its own 30-day-grace-period flow, separate from
+  // the regular Save Settings button (matches how UberEats/DoorDash don't
+  // let a restaurant vanish instantly with no checks).
+  const requestDeletion = () => {
+    if (!window.confirm('Request permanent deletion of this restaurant?\n\nIt will close immediately and be permanently removed in 30 days unless cancelled before then. Blocked if any order is still in progress.')) return
+    setDeletionLoading(true)
+    setDeletionMsg('')
+    api.post(`/api/restaurants/${settings.id}/request-deletion`).then(r => {
+      setDeletionRequestedAt(r.data?.restaurant?.deletion_requested_at || new Date().toISOString())
+      setSettings(p => ({ ...p, is_active: false }))
+      setDeletionMsg(r.data?.message || 'Deletion requested.')
+    }).catch(err => setDeletionMsg(err.response?.data?.error || 'Could not request deletion')).finally(() => setDeletionLoading(false))
+  }
+
+  const cancelDeletion = () => {
+    setDeletionLoading(true)
+    setDeletionMsg('')
+    api.post(`/api/restaurants/${settings.id}/cancel-deletion`).then(() => {
+      setDeletionRequestedAt(null)
+      setSettings(p => ({ ...p, is_active: true }))
+      setDeletionMsg('Deletion cancelled. Restaurant is open again.')
+    }).catch(err => setDeletionMsg(err.response?.data?.error || 'Could not cancel deletion')).finally(() => setDeletionLoading(false))
   }
 
   const input = (label, val, onChange, type='text') => (
@@ -134,6 +164,25 @@ export default function RestaurantSettings() {
             Connect your bank account to receive payments from BillTable.
           </p>
           <StripeOnboardButton restaurantId={settings.id} />
+        </div>
+
+        <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
+          <h3 style={{ fontFamily:"'Caveat',cursive", fontSize:'1.2rem', margin:'0 0 12px' }}>Danger Zone</h3>
+          {deletionRequestedAt ? (
+            <>
+              <p style={{ fontFamily:"'Kalam',sans-serif", fontSize:'0.85rem', color:'var(--color-ink)', marginBottom:'10px' }}>
+                ⚠️ Deletion requested on {new Date(deletionRequestedAt).toLocaleDateString()} — will be permanently removed 30 days after that unless cancelled.
+              </p>
+              <button onClick={cancelDeletion} disabled={deletionLoading} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid #1A1A1A', borderRadius:'8px', background:'#1A1A1A', color:'#fff', cursor:'pointer', fontSize:'0.95rem' }}>
+                {deletionLoading ? '...' : 'Cancel Deletion'}
+              </button>
+            </>
+          ) : (
+            <button onClick={requestDeletion} disabled={deletionLoading} style={{ fontFamily:"'Patrick Hand',sans-serif", padding:'10px 24px', border:'2px solid var(--color-ink)', borderRadius:'8px', background:'#fff', color:'var(--color-ink)', cursor:'pointer', fontSize:'0.95rem' }}>
+              {deletionLoading ? '...' : 'Close Restaurant Permanently'}
+            </button>
+          )}
+          {deletionMsg && <p style={{ fontFamily:"'Kalam',sans-serif", fontSize:'0.8rem', marginTop:'8px' }}>{deletionMsg}</p>}
         </div>
 
         <div style={{ borderTop:'1px solid #E8E8E8', paddingTop:'16px' }}>
