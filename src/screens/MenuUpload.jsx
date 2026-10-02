@@ -7,7 +7,7 @@ const CATEGORIES = ['Appetizer', 'Main', 'Dessert', 'Drink', 'Other'];
 export default function MenuUpload() {
   const navigate = useNavigate();
   const [menus, setMenus] = useState([]);
-  const [form, setForm] = useState({ name: '', description: '', price: '', category: 'Main', available: true });
+  const [form, setForm] = useState({ name: '', description: '', price: '', servingSize: '1', category: 'Main', available: true });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [editId, setEditId] = useState(null);
@@ -56,6 +56,10 @@ export default function MenuUpload() {
       formData.append('name', form.name);
       formData.append('description', form.description);
       formData.append('price', form.price);
+      // "One plate feeds N people" -- BillTable uses this to work out how
+      // many plates of this dish a catering order needs (guest count split
+      // across the dishes, rounded up to whole plates).
+      formData.append('servingSize', form.servingSize || '1');
       formData.append('category', form.category);
       formData.append('available', form.available);
       formData.append('restaurantId', restaurantId);
@@ -68,7 +72,7 @@ export default function MenuUpload() {
         await api.post('/api/menus', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         setMessage('Menu added!');
       }
-      setForm({ name: '', description: '', price: '', category: 'Main', available: true });
+      setForm({ name: '', description: '', price: '', servingSize: '1', category: 'Main', available: true });
       setImageFile(null);
       setImagePreview(null);
       setEditId(null);
@@ -82,7 +86,7 @@ export default function MenuUpload() {
 
   const handleEdit = (menu) => {
     setEditId(menu.id);
-    setForm({ name: menu.name, description: menu.description || '', price: menu.price, category: menu.category || 'Main', available: menu.is_available !== false });
+    setForm({ name: menu.name, description: menu.description || '', price: menu.price, servingSize: String(menu.serving_size || 1), category: menu.category || 'Main', available: menu.is_available !== false });
     setImagePreview(menu.image_url || null);
     setImageFile(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -140,6 +144,11 @@ export default function MenuUpload() {
         <input style={inputStyle} placeholder="Dish name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <input style={inputStyle} placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         <input style={inputStyle} placeholder="Price ($) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+        <label style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>1 plate feeds</span>
+          <input style={{ ...inputStyle, width: '90px' }} type="number" min="1" max="100" value={form.servingSize} onChange={(e) => setForm({ ...form, servingSize: e.target.value })} />
+          <span style={{ fontFamily: 'var(--font-hint)', fontSize: '14px', color: 'var(--color-pencil)' }}>people</span>
+        </label>
         <select style={inputStyle} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
           {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -158,7 +167,7 @@ export default function MenuUpload() {
           {loading ? 'Saving...' : editId ? 'Update Menu' : '+ Add dish'}
         </button>
         {editId && (
-          <button onClick={() => { setEditId(null); setForm({ name: '', description: '', price: '', category: 'Main', available: true }); setImagePreview(null); setImageFile(null); }} style={{ padding: '14px 20px', background: 'none', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>
+          <button onClick={() => { setEditId(null); setForm({ name: '', description: '', price: '', servingSize: '1', category: 'Main', available: true }); setImagePreview(null); setImageFile(null); }} style={{ padding: '14px 20px', background: 'none', border: '2px solid var(--color-ink)', borderRadius: 'var(--radius)', fontFamily: 'var(--font-body)', fontSize: '16px', cursor: 'pointer' }}>
             Cancel
           </button>
         )}
@@ -181,7 +190,7 @@ export default function MenuUpload() {
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 'bold' }}>{menu.name}</span>
                   <span style={{ marginLeft: '8px', fontSize: '11px', padding: '2px 8px', border: '1px solid var(--color-light)', borderRadius: '20px', fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)' }}>{menu.category || 'Main'}</span>
                 </div>
-                <span style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)' }}>${menu.price}</span>
+                <span style={{ fontFamily: 'var(--font-hint)', color: 'var(--color-pencil)' }}>${menu.price} · feeds {menu.serving_size || 1}</span>
               </div>
               {menu.description && <p style={{ fontFamily: 'var(--font-hint)', fontSize: '13px', color: 'var(--color-pencil)', margin: '4px 0' }}>{menu.description}</p>}
               <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
