@@ -86,7 +86,7 @@ export default function MenuUpload() {
 
   const handleEdit = (menu) => {
     setEditId(menu.id);
-    setForm({ name: menu.name, description: menu.description || '', price: menu.price, servingSize: String(menu.serving_size || 1), category: menu.category || 'Main', available: menu.is_available !== false });
+    setForm({ name: menu.name, description: menu.description || '', price: menu.price, servingSize: String(menu.serving_size || 1), category: CATEGORIES.find((c) => c.toLowerCase() === String(menu.category || 'main').toLowerCase()) || 'Main', available: menu.is_available !== false });
     setImagePreview(menu.image_url || null);
     setImageFile(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
